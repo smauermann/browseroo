@@ -14,6 +14,8 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - Import AppKit when using NSApplication (e.g., for NSApplication.shared.terminate(nil) to quit app)
 - Use NSApplication.shared.orderFrontStandardAboutPanel(options:) for native About dialogs; call activate(ignoringOtherApps:) first for menu bar apps
 - Use SMAppService.mainApp from ServiceManagement framework for login items (macOS 13.0+); .register()/.unregister() to toggle, .status == .enabled to check state
+- For VoiceOver accessibility: use .accessibilityLabel() on buttons (include state for toggles), .accessibilityHint() for action description, .accessibilityHidden(true) on decorative images
+- SwiftUI MenuBarExtra provides standard macOS menu keyboard navigation automatically (arrow keys, Enter, Escape)
 ---
 
 ## 2026-01-28 - US-001
@@ -169,4 +171,23 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - SMAppService.mainApp.register() / .unregister() enable/disable login item (throws errors)
   - State is managed by macOS - no need to persist in UserDefaults
   - Import ServiceManagement to use SMAppService
+---
+
+## 2026-01-28 - US-010
+- What was implemented:
+  - Added comprehensive accessibility support for VoiceOver
+  - Browser buttons have accessibility labels indicating browser name and current default status
+  - Launch at Login toggle has accessibility label showing enabled/disabled state
+  - About and Quit buttons have accessibility labels and hints
+  - Decorative images (icons, checkmarks) hidden from accessibility tree with .accessibilityHidden(true)
+  - Keyboard navigation (arrow keys, Enter/Return, Escape) works via built-in macOS menu behavior
+- Files changed:
+  - Browseroo/BrowserooApp.swift (modified)
+- **Learnings for future iterations:**
+  - SwiftUI MenuBarExtra inherits standard macOS NSMenu keyboard navigation automatically
+  - Arrow keys, Enter/Return, and Escape all work without additional code
+  - Use .accessibilityLabel() on interactive elements to describe their state
+  - Use .accessibilityHint() to describe what happens when activated
+  - Use .accessibilityHidden(true) on decorative images to prevent VoiceOver from reading them
+  - For toggles/checkmarks, include the current state in the accessibility label
 ---

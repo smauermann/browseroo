@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import ServiceManagement
 
 @main
 struct BrowserooApp: App {
@@ -13,6 +14,7 @@ struct BrowserooApp: App {
 struct BrowserMenuView: View {
     @State private var browsers: [Browser] = []
     @State private var defaultBrowserID: String?
+    @State private var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
 
     private let browserManager = BrowserManager()
 
@@ -29,6 +31,20 @@ struct BrowserMenuView: View {
                         if browser.bundleIdentifier == defaultBrowserID {
                             Image(systemName: "checkmark")
                         }
+                    }
+                }
+            }
+
+            Divider()
+
+            Button(action: {
+                toggleLaunchAtLogin()
+            }) {
+                HStack {
+                    Text("Launch at Login")
+                    Spacer()
+                    if launchAtLogin {
+                        Image(systemName: "checkmark")
                     }
                 }
             }
@@ -58,10 +74,25 @@ struct BrowserMenuView: View {
     private func refreshBrowserList() {
         browsers = browserManager.getInstalledBrowsers()
         defaultBrowserID = browserManager.getDefaultBrowser()?.bundleIdentifier
+        launchAtLogin = SMAppService.mainApp.status == .enabled
     }
 
     private func switchToBrowser(_ browser: Browser) {
         browserManager.setDefaultBrowser(bundleIdentifier: browser.bundleIdentifier)
         defaultBrowserID = browser.bundleIdentifier
+    }
+
+    private func toggleLaunchAtLogin() {
+        do {
+            if launchAtLogin {
+                try SMAppService.mainApp.unregister()
+            } else {
+                try SMAppService.mainApp.register()
+            }
+            launchAtLogin = SMAppService.mainApp.status == .enabled
+        } catch {
+            // Silently handle errors - the UI will reflect the actual state
+            launchAtLogin = SMAppService.mainApp.status == .enabled
+        }
     }
 }

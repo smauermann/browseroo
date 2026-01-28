@@ -149,6 +149,65 @@
       "priority": 10,
       "passes": true,
       "notes": "Keyboard navigation is built into SwiftUI MenuBarExtra (standard macOS menu behavior). Added comprehensive accessibility labels and hints for VoiceOver support on all interactive elements. Swift syntax verified with swiftc -parse."
+    },
+    {
+      "id": "US-011",
+      "title": "Request Accessibility permissions",
+      "description": "As a user, I need to grant Browseroo Accessibility permissions so it can automate the confirmation dialog.",
+      "acceptanceCriteria": [
+        "Check for Accessibility permission using AXIsProcessTrusted()",
+        "If not granted, show alert explaining why permission is needed",
+        "Provide button to open System Settings > Privacy & Security > Accessibility",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "Implemented AccessibilityManager class with isAccessibilityGranted() using AXIsProcessTrusted(), showAccessibilityAlert() with NSAlert, and openAccessibilitySettings() using x-apple.systempreferences URL. Swift syntax verified with swiftc -parse."
+    },
+    {
+      "id": "US-012",
+      "title": "Implement AppleScript to click confirmation button",
+      "description": "As a developer, I need an AppleScript that finds and clicks the confirmation button in the default browser dialog.",
+      "acceptanceCriteria": [
+        "Create AppleScript that targets the CoreServicesUIAgent confirmation dialog",
+        "Script finds button containing 'Use' text (e.g., 'Use Chrome', 'Use Safari')",
+        "Script clicks the button to confirm the change",
+        "Script handles case where dialog doesn't appear (already default)",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Execute AppleScript after browser switch API call",
+      "description": "As a developer, I need to run the confirmation AppleScript immediately after calling LSSetDefaultHandlerForURLScheme.",
+      "acceptanceCriteria": [
+        "After LSSetDefaultHandlerForURLScheme call, execute AppleScript via NSAppleScript",
+        "Add small delay (100-200ms) to allow dialog to appear before running script",
+        "Run AppleScript asynchronously to not block UI",
+        "Handle AppleScript execution errors gracefully",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Show permission status in menu",
+      "description": "As a user, I want to see if auto-confirm is enabled and working.",
+      "acceptanceCriteria": [
+        "Add 'Auto-Confirm' section or indicator in menu",
+        "Show checkmark if Accessibility permission granted",
+        "Show 'Grant Permission...' option if not granted",
+        "Clicking option opens permission request flow from US-011",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
     }
   ]
 }

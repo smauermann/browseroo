@@ -16,6 +16,8 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - Use SMAppService.mainApp from ServiceManagement framework for login items (macOS 13.0+); .register()/.unregister() to toggle, .status == .enabled to check state
 - For VoiceOver accessibility: use .accessibilityLabel() on buttons (include state for toggles), .accessibilityHint() for action description, .accessibilityHidden(true) on decorative images
 - SwiftUI MenuBarExtra provides standard macOS menu keyboard navigation automatically (arrow keys, Enter, Escape)
+- Use AXIsProcessTrusted() from ApplicationServices to check Accessibility permission
+- Open System Settings Accessibility: NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
 ---
 
 ## 2026-01-28 - US-001
@@ -190,4 +192,24 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Use .accessibilityHint() to describe what happens when activated
   - Use .accessibilityHidden(true) on decorative images to prevent VoiceOver from reading them
   - For toggles/checkmarks, include the current state in the accessibility label
+---
+
+## 2026-01-29 - US-011
+- What was implemented:
+  - Created AccessibilityManager class with static methods for accessibility permission handling
+  - isAccessibilityGranted() uses AXIsProcessTrusted() from ApplicationServices framework
+  - showAccessibilityAlert() displays NSAlert explaining why permission is needed with two buttons
+  - openAccessibilitySettings() opens System Settings to Privacy & Security > Accessibility using x-apple.systempreferences URL scheme
+  - Added accessibilityGranted @State property to BrowserMenuView
+  - Added requestAccessibilityPermission() method to trigger permission request flow
+  - Integrated accessibility check in refreshBrowserList() to update state when menu opens
+- Files changed:
+  - Browseroo/AccessibilityManager.swift (new)
+  - Browseroo/BrowserooApp.swift (modified)
+  - Browseroo.xcodeproj/project.pbxproj (modified - added new file)
+- **Learnings for future iterations:**
+  - AXIsProcessTrusted() from ApplicationServices returns Bool for accessibility permission check
+  - x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility opens Accessibility settings on macOS 13+
+  - NSAlert.runModal() returns .alertFirstButtonReturn for the first button added with addButton(withTitle:)
+  - NSApplication.shared.activate(ignoringOtherApps: true) needed before showing alerts from menu bar apps
 ---

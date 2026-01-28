@@ -251,3 +251,19 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Use _ = assignment to explicitly discard return values when error handling not needed
   - Default parameter values allow backward compatibility (autoConfirm: Bool = true)
 ---
+
+## 2026-01-29 - US-014
+- What was implemented:
+  - Added "Auto-Confirm" section in menu between "Launch at Login" toggle and the About/Quit divider
+  - When Accessibility permission is granted: shows "Auto-Confirm" label with checkmark, button disabled
+  - When permission not granted: shows "Auto-Confirm: Grant Permission..." button
+  - Clicking "Grant Permission..." calls requestAccessibilityPermission() which triggers the alert from US-011
+  - Accessibility labels and hints added for VoiceOver support
+  - Uses existing accessibilityGranted @State property which refreshes on menu open
+- Files changed:
+  - Browseroo/BrowserooApp.swift (modified)
+- **Learnings for future iterations:**
+  - SwiftUI if/else inside Group can conditionally show different views based on state
+  - Use .disabled(true) on Button to make it non-interactive while still visible (for status display)
+  - Empty action closure `action: {}` needed for disabled buttons that just show status
+---

@@ -10,6 +10,8 @@
 		AA000001001000010001 /* BrowserooApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000010001 /* BrowserooApp.swift */; };
 		AA000001001000010002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000010002 /* ContentView.swift */; };
 		AA000001001000010003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000001000000010003 /* Assets.xcassets */; };
+		AA000001001000010004 /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000010004 /* Browser.swift */; };
+		AA000001001000010005 /* BrowserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000010005 /* BrowserManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -17,6 +19,8 @@
 		AA000001000000010001 /* BrowserooApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserooApp.swift; sourceTree = "<group>"; };
 		AA000001000000010002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AA000001000000010003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA000001000000010004 /* Browser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
+		AA000001000000010005 /* BrowserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +46,8 @@
 			isa = PBXGroup;
 			children = (
 				AA000001000000010001 /* BrowserooApp.swift */,
+				AA000001000000010004 /* Browser.swift */,
+				AA000001000000010005 /* BrowserManager.swift */,
 				AA000001000000010002 /* ContentView.swift */,
 				AA000001000000010003 /* Assets.xcassets */,
 			);
@@ -127,6 +133,8 @@
 			files = (
 				AA000001001000010001 /* BrowserooApp.swift in Sources */,
 				AA000001001000010002 /* ContentView.swift in Sources */,
+				AA000001001000010004 /* Browser.swift in Sources */,
+				AA000001001000010005 /* BrowserManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

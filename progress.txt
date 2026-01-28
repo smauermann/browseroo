@@ -8,6 +8,8 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - Deployment target set in project.pbxproj under MACOSX_DEPLOYMENT_TARGET
 - xcodebuild requires Xcode.app to be installed (Command Line Tools not sufficient)
 - MenuBarExtra(title, systemImage:) is used for the menu bar dropdown (macOS 13.0+)
+- Adding new .swift files requires 4 edits to project.pbxproj: PBXBuildFile, PBXFileReference, PBXGroup children, and PBXSourcesBuildPhase files
+- Use LSCopyAllHandlersForURLScheme/LSCopyDefaultHandlerForURLScheme for browser detection (CoreServices)
 ---
 
 ## 2026-01-28 - US-001
@@ -42,4 +44,25 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - MenuBarExtra is the SwiftUI way to create menu bar apps (available macOS 13.0+)
   - MenuBarExtra takes a title (for accessibility), systemImage (SF Symbol name), and content closure
   - ContentView.swift is no longer used for menu bar apps but can be kept for potential window scenes
+---
+
+## 2026-01-28 - US-003
+- What was implemented:
+  - Created Browser struct with bundleIdentifier, name, and icon properties
+  - Created BrowserManager class with getInstalledBrowsers() method
+  - Uses LSCopyAllHandlersForURLScheme to query HTTPS URL handlers
+  - Filters using a whitelist of known browser bundle identifiers
+  - Gets app name from CFBundleName/CFBundleDisplayName and icon from NSWorkspace
+  - Returns sorted array of Browser objects
+- Files changed:
+  - Browseroo/Browser.swift (new)
+  - Browseroo/BrowserManager.swift (new)
+  - Browseroo.xcodeproj/project.pbxproj (modified - added new files)
+- **Learnings for future iterations:**
+  - LSCopyAllHandlersForURLScheme returns CFArray of bundle identifiers, needs cast to [String]
+  - takeRetainedValue() transfers ownership from CF to Swift (avoids memory leaks)
+  - NSWorkspace.shared.urlForApplication(withBundleIdentifier:) finds app location
+  - NSWorkspace.shared.icon(forFile:) gets app icon as NSImage
+  - Whitelist approach for browser filtering is more reliable than heuristics
+  - New Swift files must be added to PBXBuildFile, PBXFileReference, PBXGroup, and PBXSourcesBuildPhase in project.pbxproj
 ---

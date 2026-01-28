@@ -7,6 +7,7 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - Info.plist with LSUIElement=true makes app a menu bar agent (no Dock icon)
 - Deployment target set in project.pbxproj under MACOSX_DEPLOYMENT_TARGET
 - xcodebuild requires Xcode.app to be installed (Command Line Tools not sufficient)
+- MenuBarExtra(title, systemImage:) is used for the menu bar dropdown (macOS 13.0+)
 ---
 
 ## 2026-01-28 - US-001
@@ -27,4 +28,18 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Use `swiftc -parse` to verify Swift syntax when xcodebuild unavailable
   - LSUIElement in Info.plist controls whether app appears in Dock
   - Deployment target is set in both Debug and Release configurations in project.pbxproj
+---
+
+## 2026-01-28 - US-002
+- What was implemented:
+  - Replaced WindowGroup with MenuBarExtra in BrowserooApp
+  - App now displays a globe icon in the macOS menu bar
+  - Clicking the icon opens a dropdown menu with placeholder text "Browseroo"
+  - Combined with LSUIElement=true, app does not appear in Dock
+- Files changed:
+  - Browseroo/BrowserooApp.swift (modified)
+- **Learnings for future iterations:**
+  - MenuBarExtra is the SwiftUI way to create menu bar apps (available macOS 13.0+)
+  - MenuBarExtra takes a title (for accessibility), systemImage (SF Symbol name), and content closure
+  - ContentView.swift is no longer used for menu bar apps but can be kept for potential window scenes
 ---

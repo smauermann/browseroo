@@ -81,4 +81,33 @@ class BrowserManager {
 
         return browsers
     }
+
+    /// Returns the current default browser, or nil if it cannot be determined.
+    func getDefaultBrowser() -> Browser? {
+        // Get the default handler for https scheme
+        guard let defaultBundleID = LSCopyDefaultHandlerForURLScheme("https" as CFString)?.takeRetainedValue() as String? else {
+            return nil
+        }
+
+        // Get app URL and info
+        guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: defaultBundleID) else {
+            return nil
+        }
+
+        // Get app name from bundle
+        guard let bundle = Bundle(url: appURL),
+              let name = bundle.object(forInfoDictionaryKey: "CFBundleName") as? String ?? bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String else {
+            return nil
+        }
+
+        // Get app icon
+        let icon = NSWorkspace.shared.icon(forFile: appURL.path)
+        icon.size = NSSize(width: 16, height: 16)
+
+        return Browser(
+            bundleIdentifier: defaultBundleID,
+            name: name,
+            icon: icon
+        )
+    }
 }

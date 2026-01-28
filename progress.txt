@@ -66,3 +66,17 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Whitelist approach for browser filtering is more reliable than heuristics
   - New Swift files must be added to PBXBuildFile, PBXFileReference, PBXGroup, and PBXSourcesBuildPhase in project.pbxproj
 ---
+
+## 2026-01-28 - US-004
+- What was implemented:
+  - Added getDefaultBrowser() method to BrowserManager class
+  - Uses LSCopyDefaultHandlerForURLScheme with 'https' scheme to get default browser bundle ID
+  - Returns a Browser object matching the default, or nil if it cannot be determined
+  - Follows same pattern as getInstalledBrowsers() for fetching app name and icon
+- Files changed:
+  - Browseroo/BrowserManager.swift (modified)
+- **Learnings for future iterations:**
+  - LSCopyDefaultHandlerForURLScheme returns a single CFString (vs CFArray for LSCopyAllHandlersForURLScheme)
+  - Cast pattern for default handler: LSCopyDefaultHandlerForURLScheme(...)?.takeRetainedValue() as String?
+  - Default browser detection doesn't require whitelist filtering - it returns whatever the user has set
+---

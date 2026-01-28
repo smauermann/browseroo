@@ -80,3 +80,20 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Cast pattern for default handler: LSCopyDefaultHandlerForURLScheme(...)?.takeRetainedValue() as String?
   - Default browser detection doesn't require whitelist filtering - it returns whatever the user has set
 ---
+
+## 2026-01-28 - US-005
+- What was implemented:
+  - Created BrowserMenuView struct with @State properties for browsers list and default browser ID
+  - Menu displays all installed browsers using ForEach over Browser array
+  - Each browser shows icon (Image(nsImage:)) and name (Text)
+  - Current default browser has a checkmark (Image(systemName: "checkmark"))
+  - List refreshes when menu opens using .onAppear modifier
+  - Button placeholder added for browser switching (to be implemented in US-006)
+- Files changed:
+  - Browseroo/BrowserooApp.swift (modified)
+- **Learnings for future iterations:**
+  - SwiftUI MenuBarExtra content uses standard SwiftUI views (Button, HStack, ForEach, etc.)
+  - Image(nsImage:) is used to display NSImage in SwiftUI
+  - Group wrapper needed around ForEach to attach .onAppear modifier
+  - .onAppear is called each time the menu opens, ensuring fresh browser list
+---

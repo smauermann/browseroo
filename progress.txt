@@ -234,3 +234,20 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - CoreServicesUIAgent is the process that shows the default browser confirmation dialog
   - AppleScript "name of btn starts with 'Use '" matches buttons like "Use Chrome", "Use Safari"
 ---
+
+## 2026-01-29 - US-013
+- What was implemented:
+  - Modified BrowserManager.setDefaultBrowser() to execute AppleScript after setting default browser
+  - Added autoConfirm parameter (default true) to control whether to auto-click confirmation dialog
+  - Created autoConfirmBrowserChange() private method that runs asynchronously on background queue
+  - Implemented 150ms delay using Thread.sleep(forTimeInterval:) to allow dialog to appear
+  - Calls ConfirmationDialogHandler.clickConfirmButton() after delay
+  - Errors handled gracefully - result is discarded with _ = assignment
+- Files changed:
+  - Browseroo/BrowserManager.swift (modified)
+- **Learnings for future iterations:**
+  - Use DispatchQueue.global(qos: .userInitiated).async {} to run code asynchronously without blocking UI
+  - Thread.sleep(forTimeInterval:) takes seconds (0.15 = 150ms)
+  - Use _ = assignment to explicitly discard return values when error handling not needed
+  - Default parameter values allow backward compatibility (autoConfirm: Bool = true)
+---

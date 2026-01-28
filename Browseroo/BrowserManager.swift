@@ -82,6 +82,21 @@ class BrowserManager {
         return browsers
     }
 
+    /// Sets the specified browser as the system default for HTTP and HTTPS.
+    /// Returns true if successful, false otherwise.
+    @discardableResult
+    func setDefaultBrowser(bundleIdentifier: String) -> Bool {
+        let httpResult = LSSetDefaultHandlerForURLScheme(
+            "http" as CFString,
+            bundleIdentifier as CFString
+        )
+        let httpsResult = LSSetDefaultHandlerForURLScheme(
+            "https" as CFString,
+            bundleIdentifier as CFString
+        )
+        return httpResult == noErr && httpsResult == noErr
+    }
+
     /// Returns the current default browser, or nil if it cannot be determined.
     func getDefaultBrowser() -> Browser? {
         // Get the default handler for https scheme

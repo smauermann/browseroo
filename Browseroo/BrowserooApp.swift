@@ -19,7 +19,7 @@ struct BrowserMenuView: View {
         Group {
             ForEach(browsers) { browser in
                 Button(action: {
-                    // TODO: Implement browser switching in US-006
+                    switchToBrowser(browser)
                 }) {
                     HStack {
                         Image(nsImage: browser.icon)
@@ -40,5 +40,10 @@ struct BrowserMenuView: View {
     private func refreshBrowserList() {
         browsers = browserManager.getInstalledBrowsers()
         defaultBrowserID = browserManager.getDefaultBrowser()?.bundleIdentifier
+    }
+
+    private func switchToBrowser(_ browser: Browser) {
+        browserManager.setDefaultBrowser(bundleIdentifier: browser.bundleIdentifier)
+        defaultBrowserID = browser.bundleIdentifier
     }
 }

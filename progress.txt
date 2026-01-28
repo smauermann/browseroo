@@ -267,3 +267,18 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Use .disabled(true) on Button to make it non-interactive while still visible (for status display)
   - Empty action closure `action: {}` needed for disabled buttons that just show status
 ---
+
+## 2026-01-29 - US-015
+- What was implemented:
+  - Fixed AppleScript in ConfirmationDialogHandler to use direct button targeting instead of repeat loop
+  - Replaced `repeat with btn in buttons` loop with `click (first button whose name starts with "Use ")`
+  - Added `exists` check before clicking to gracefully handle no-dialog case
+  - The original repeat loop failed silently when iterating over buttons
+- Files changed:
+  - Browseroo/ConfirmationDialogHandler.swift (modified)
+- **Learnings for future iterations:**
+  - AppleScript repeat loops over UI elements can fail silently in some contexts
+  - Direct button targeting with `click (first button whose name starts with "X")` is more reliable
+  - Always use `if exists` check before attempting to click dynamic UI elements
+  - Use `first button whose name starts with` for partial name matching in AppleScript
+---

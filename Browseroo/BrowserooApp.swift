@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 @main
 struct BrowserooApp: App {
@@ -31,6 +32,13 @@ struct BrowserMenuView: View {
                     }
                 }
             }
+
+            Divider()
+
+            Button("Quit Browseroo") {
+                NSApplication.shared.terminate(nil)
+            }
+            .keyboardShortcut("q")
         }
         .onAppear {
             refreshBrowserList()

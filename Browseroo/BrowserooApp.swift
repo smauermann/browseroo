@@ -15,6 +15,7 @@ struct BrowserMenuView: View {
     @State private var browsers: [Browser] = []
     @State private var defaultBrowserID: String?
     @State private var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
+    @State private var accessibilityGranted: Bool = AccessibilityManager.isAccessibilityGranted()
 
     private let browserManager = BrowserManager()
 
@@ -90,6 +91,7 @@ struct BrowserMenuView: View {
         browsers = browserManager.getInstalledBrowsers()
         defaultBrowserID = browserManager.getDefaultBrowser()?.bundleIdentifier
         launchAtLogin = SMAppService.mainApp.status == .enabled
+        accessibilityGranted = AccessibilityManager.isAccessibilityGranted()
     }
 
     private func switchToBrowser(_ browser: Browser) {
@@ -109,5 +111,11 @@ struct BrowserMenuView: View {
             // Silently handle errors - the UI will reflect the actual state
             launchAtLogin = SMAppService.mainApp.status == .enabled
         }
+    }
+
+    private func requestAccessibilityPermission() {
+        AccessibilityManager.showAccessibilityAlert()
+        // Refresh state after user potentially grants permission
+        accessibilityGranted = AccessibilityManager.isAccessibilityGranted()
     }
 }

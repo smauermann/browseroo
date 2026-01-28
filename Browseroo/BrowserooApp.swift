@@ -35,6 +35,16 @@ struct BrowserMenuView: View {
 
             Divider()
 
+            Button("About Browseroo") {
+                NSApplication.shared.activate(ignoringOtherApps: true)
+                NSApplication.shared.orderFrontStandardAboutPanel(options: [
+                    .applicationName: "Browseroo",
+                    .applicationVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0",
+                    .version: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1",
+                    .copyright: "© 2026 Browseroo. All rights reserved."
+                ])
+            }
+
             Button("Quit Browseroo") {
                 NSApplication.shared.terminate(nil)
             }

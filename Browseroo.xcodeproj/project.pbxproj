@@ -13,6 +13,7 @@
 		AA000001001000010004 /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000010004 /* Browser.swift */; };
 		AA000001001000010005 /* BrowserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000010005 /* BrowserManager.swift */; };
 		AA000001001000010006 /* AccessibilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000010006 /* AccessibilityManager.swift */; };
+		AA000001001000010007 /* ConfirmationDialogHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000010007 /* ConfirmationDialogHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		AA000001000000010004 /* Browser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
 		AA000001000000010005 /* BrowserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserManager.swift; sourceTree = "<group>"; };
 		AA000001000000010006 /* AccessibilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityManager.swift; sourceTree = "<group>"; };
+		AA000001000000010007 /* ConfirmationDialogHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationDialogHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 				AA000001000000010006 /* AccessibilityManager.swift */,
 				AA000001000000010004 /* Browser.swift */,
 				AA000001000000010005 /* BrowserManager.swift */,
+				AA000001000000010007 /* ConfirmationDialogHandler.swift */,
 				AA000001000000010002 /* ContentView.swift */,
 				AA000001000000010003 /* Assets.xcassets */,
 			);
@@ -139,6 +142,7 @@
 				AA000001001000010004 /* Browser.swift in Sources */,
 				AA000001001000010005 /* BrowserManager.swift in Sources */,
 				AA000001001000010006 /* AccessibilityManager.swift in Sources */,
+				AA000001001000010007 /* ConfirmationDialogHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

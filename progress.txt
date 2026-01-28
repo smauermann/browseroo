@@ -13,6 +13,7 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - Use LSSetDefaultHandlerForURLScheme for both 'http' and 'https' to set default browser (CoreServices)
 - Import AppKit when using NSApplication (e.g., for NSApplication.shared.terminate(nil) to quit app)
 - Use NSApplication.shared.orderFrontStandardAboutPanel(options:) for native About dialogs; call activate(ignoringOtherApps:) first for menu bar apps
+- Use SMAppService.mainApp from ServiceManagement framework for login items (macOS 13.0+); .register()/.unregister() to toggle, .status == .enabled to check state
 ---
 
 ## 2026-01-28 - US-001
@@ -150,4 +151,22 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Bundle.main.object(forInfoDictionaryKey:) retrieves values from Info.plist at runtime
   - NSApplication.shared.activate(ignoringOtherApps: true) is needed to bring the panel to front for menu bar apps
   - CFBundleShortVersionString is the "marketing version" (e.g., 1.0), CFBundleVersion is the build number
+---
+
+## 2026-01-28 - US-009
+- What was implemented:
+  - Added "Launch at Login" toggle button in menu (between browser list and About)
+  - Uses SMAppService.mainApp from ServiceManagement framework for login item management
+  - Toggle shows checkmark when enabled, no checkmark when disabled
+  - toggleLaunchAtLogin() method calls register() or unregister() based on current state
+  - State refreshes on menu open (in refreshBrowserList()) to reflect external changes
+  - State persists automatically via SMAppService (macOS manages the login items)
+- Files changed:
+  - Browseroo/BrowserooApp.swift (modified)
+- **Learnings for future iterations:**
+  - SMAppService.mainApp (ServiceManagement framework) is the modern API for login items (macOS 13.0+)
+  - SMAppService.mainApp.status == .enabled checks if login item is currently enabled
+  - SMAppService.mainApp.register() / .unregister() enable/disable login item (throws errors)
+  - State is managed by macOS - no need to persist in UserDefaults
+  - Import ServiceManagement to use SMAppService
 ---

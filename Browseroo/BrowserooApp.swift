@@ -61,6 +61,28 @@ struct BrowserMenuView: View {
                 : "Launch at Login, disabled")
             .accessibilityHint("Double tap to toggle")
 
+            if accessibilityGranted {
+                Button(action: {}) {
+                    HStack {
+                        Text("Auto-Confirm")
+                        Spacer()
+                        Image(systemName: "checkmark")
+                            .accessibilityHidden(true)
+                    }
+                }
+                .disabled(true)
+                .accessibilityLabel("Auto-Confirm, enabled")
+                .accessibilityHint("Accessibility permission granted")
+            } else {
+                Button(action: {
+                    requestAccessibilityPermission()
+                }) {
+                    Text("Auto-Confirm: Grant Permission...")
+                }
+                .accessibilityLabel("Auto-Confirm, disabled")
+                .accessibilityHint("Double tap to grant Accessibility permission")
+            }
+
             Divider()
 
             Button("About Browseroo") {

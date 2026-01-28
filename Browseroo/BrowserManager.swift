@@ -84,8 +84,10 @@ class BrowserManager {
 
     /// Sets the specified browser as the system default for HTTP and HTTPS.
     /// Returns true if successful, false otherwise.
+    /// If autoConfirm is true, attempts to click the confirmation dialog button
+    /// asynchronously after a short delay.
     @discardableResult
-    func setDefaultBrowser(bundleIdentifier: String) -> Bool {
+    func setDefaultBrowser(bundleIdentifier: String, autoConfirm: Bool = true) -> Bool {
         let httpResult = LSSetDefaultHandlerForURLScheme(
             "http" as CFString,
             bundleIdentifier as CFString
@@ -94,7 +96,31 @@ class BrowserManager {
             "https" as CFString,
             bundleIdentifier as CFString
         )
-        return httpResult == noErr && httpsResult == noErr
+
+        let success = httpResult == noErr && httpsResult == noErr
+
+        // If successful and autoConfirm enabled, run AppleScript asynchronously
+        // to click the confirmation dialog (if it appears)
+        if success && autoConfirm {
+            autoConfirmBrowserChange()
+        }
+
+        return success
+    }
+
+    /// Asynchronously waits a short delay and then executes the AppleScript
+    /// to click the confirmation dialog button. Runs on a background queue
+    /// to avoid blocking the UI.
+    private func autoConfirmBrowserChange() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            // Wait 150ms for the dialog to appear
+            Thread.sleep(forTimeInterval: 0.15)
+
+            // Execute the AppleScript to click the confirmation button
+            // Errors are handled gracefully - if no dialog appears or
+            // clicking fails, we simply don't crash
+            _ = ConfirmationDialogHandler.clickConfirmButton()
+        }
     }
 
     /// Returns the current default browser, or nil if it cannot be determined.

@@ -18,13 +18,11 @@ class ConfirmationDialogHandler {
                     set windowCount to count of windows
                     if windowCount > 0 then
                         tell window 1
-                            -- Find and click the button that starts with "Use "
-                            repeat with btn in buttons
-                                if name of btn starts with "Use " then
-                                    click btn
-                                    return "clicked"
-                                end if
-                            end repeat
+                            -- Check if a "Use *" button exists, then click it directly
+                            if exists (first button whose name starts with "Use ") then
+                                click (first button whose name starts with "Use ")
+                                return "clicked"
+                            end if
                         end tell
                     end if
                 end tell

@@ -12,6 +12,7 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - Use LSCopyAllHandlersForURLScheme/LSCopyDefaultHandlerForURLScheme for browser detection (CoreServices)
 - Use LSSetDefaultHandlerForURLScheme for both 'http' and 'https' to set default browser (CoreServices)
 - Import AppKit when using NSApplication (e.g., for NSApplication.shared.terminate(nil) to quit app)
+- Use NSApplication.shared.orderFrontStandardAboutPanel(options:) for native About dialogs; call activate(ignoringOtherApps:) first for menu bar apps
 ---
 
 ## 2026-01-28 - US-001
@@ -131,4 +132,22 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - .keyboardShortcut("q") automatically creates ⌘Q (Command modifier is default)
   - Divider() in SwiftUI creates a visual separator between menu items
   - Import AppKit is required to use NSApplication (not included in SwiftUI by default)
+---
+
+## 2026-01-28 - US-008
+- What was implemented:
+  - Added "About Browseroo" Button in menu (below divider, above Quit)
+  - Uses NSApplication.shared.orderFrontStandardAboutPanel(options:) to show native macOS about panel
+  - NSApplication.shared.activate(ignoringOtherApps: true) ensures the panel comes to front
+  - Added version info to Info.plist: CFBundleShortVersionString (1.0), CFBundleVersion (1), NSHumanReadableCopyright
+  - About panel displays app name, version number, and copyright
+- Files changed:
+  - Browseroo/BrowserooApp.swift (modified)
+  - Browseroo/Info.plist (modified)
+- **Learnings for future iterations:**
+  - NSApplication.shared.orderFrontStandardAboutPanel(options:) shows the standard macOS About dialog
+  - Options dict accepts keys: .applicationName, .applicationVersion, .version, .copyright
+  - Bundle.main.object(forInfoDictionaryKey:) retrieves values from Info.plist at runtime
+  - NSApplication.shared.activate(ignoringOtherApps: true) is needed to bring the panel to front for menu bar apps
+  - CFBundleShortVersionString is the "marketing version" (e.g., 1.0), CFBundleVersion is the build number
 ---

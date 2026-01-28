@@ -11,6 +11,7 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - Adding new .swift files requires 4 edits to project.pbxproj: PBXBuildFile, PBXFileReference, PBXGroup children, and PBXSourcesBuildPhase files
 - Use LSCopyAllHandlersForURLScheme/LSCopyDefaultHandlerForURLScheme for browser detection (CoreServices)
 - Use LSSetDefaultHandlerForURLScheme for both 'http' and 'https' to set default browser (CoreServices)
+- Import AppKit when using NSApplication (e.g., for NSApplication.shared.terminate(nil) to quit app)
 ---
 
 ## 2026-01-28 - US-001
@@ -114,4 +115,20 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - @discardableResult allows ignoring the return value when not needed
   - Must set both 'http' and 'https' schemes for complete browser switching
   - Updating @State property immediately makes UI responsive without waiting for refresh
+---
+
+## 2026-01-28 - US-007
+- What was implemented:
+  - Added Divider() between browser list and Quit option
+  - Added "Quit Browseroo" Button with action to terminate application
+  - Uses NSApplication.shared.terminate(nil) to quit the app
+  - Added .keyboardShortcut("q") modifier for ⌘Q support
+  - Added AppKit import for NSApplication access
+- Files changed:
+  - Browseroo/BrowserooApp.swift (modified)
+- **Learnings for future iterations:**
+  - NSApplication.shared.terminate(nil) is the standard way to quit a macOS app
+  - .keyboardShortcut("q") automatically creates ⌘Q (Command modifier is default)
+  - Divider() in SwiftUI creates a visual separator between menu items
+  - Import AppKit is required to use NSApplication (not included in SwiftUI by default)
 ---

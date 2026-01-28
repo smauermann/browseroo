@@ -103,8 +103,8 @@
         "App builds without errors using xcodebuild"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented Quit button with Divider separator above it. Uses NSApplication.shared.terminate(nil) for quit action and .keyboardShortcut(\"q\") for ⌘Q. Swift syntax verified with swiftc -parse."
     },
     {
       "id": "US-008",

@@ -18,6 +18,7 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - SwiftUI MenuBarExtra provides standard macOS menu keyboard navigation automatically (arrow keys, Enter, Escape)
 - Use AXIsProcessTrusted() from ApplicationServices to check Accessibility permission
 - Open System Settings Accessibility: NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+- Use NSAppleScript(source:) to run AppleScript from Swift; executeAndReturnError(&errorDict) runs it and returns result or nil
 ---
 
 ## 2026-01-28 - US-001
@@ -212,4 +213,24 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility opens Accessibility settings on macOS 13+
   - NSAlert.runModal() returns .alertFirstButtonReturn for the first button added with addButton(withTitle:)
   - NSApplication.shared.activate(ignoringOtherApps: true) needed before showing alerts from menu bar apps
+---
+
+## 2026-01-29 - US-012
+- What was implemented:
+  - Created ConfirmationDialogHandler class with static AppleScript and execution method
+  - AppleScript targets CoreServicesUIAgent process which displays the default browser confirmation dialog
+  - Script finds button whose name starts with "Use " and clicks it to confirm browser change
+  - Handles case where no dialog is present (returns .noDialog instead of error)
+  - ConfirmResult enum provides typed results: .clicked, .noDialog, .error(String)
+  - clickConfirmButton() method executes script via NSAppleScript and returns typed result
+- Files changed:
+  - Browseroo/ConfirmationDialogHandler.swift (new)
+  - Browseroo.xcodeproj/project.pbxproj (modified - added new file)
+- **Learnings for future iterations:**
+  - NSAppleScript(source:) creates an AppleScript from a string
+  - executeAndReturnError(&errorDict) runs the script; returns NSAppleEventDescriptor or nil on error
+  - errorDict[NSAppleScript.errorMessage] contains error message if execution fails
+  - AppleScript uses "tell application System Events" to interact with UI elements
+  - CoreServicesUIAgent is the process that shows the default browser confirmation dialog
+  - AppleScript "name of btn starts with 'Use '" matches buttons like "Use Chrome", "Use Safari"
 ---

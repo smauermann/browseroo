@@ -26,13 +26,19 @@ struct BrowserMenuView: View {
                 }) {
                     HStack {
                         Image(nsImage: browser.icon)
+                            .accessibilityHidden(true)
                         Text(browser.name)
                         Spacer()
                         if browser.bundleIdentifier == defaultBrowserID {
                             Image(systemName: "checkmark")
+                                .accessibilityHidden(true)
                         }
                     }
                 }
+                .accessibilityLabel(browser.bundleIdentifier == defaultBrowserID
+                    ? "\(browser.name), current default browser"
+                    : browser.name)
+                .accessibilityHint("Double tap to set as default browser")
             }
 
             Divider()
@@ -45,9 +51,14 @@ struct BrowserMenuView: View {
                     Spacer()
                     if launchAtLogin {
                         Image(systemName: "checkmark")
+                            .accessibilityHidden(true)
                     }
                 }
             }
+            .accessibilityLabel(launchAtLogin
+                ? "Launch at Login, enabled"
+                : "Launch at Login, disabled")
+            .accessibilityHint("Double tap to toggle")
 
             Divider()
 
@@ -60,11 +71,15 @@ struct BrowserMenuView: View {
                     .copyright: "© 2026 Browseroo. All rights reserved."
                 ])
             }
+            .accessibilityLabel("About Browseroo")
+            .accessibilityHint("Double tap to show application information")
 
             Button("Quit Browseroo") {
                 NSApplication.shared.terminate(nil)
             }
             .keyboardShortcut("q")
+            .accessibilityLabel("Quit Browseroo")
+            .accessibilityHint("Double tap to quit the application")
         }
         .onAppear {
             refreshBrowserList()

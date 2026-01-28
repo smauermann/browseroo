@@ -10,6 +10,7 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - MenuBarExtra(title, systemImage:) is used for the menu bar dropdown (macOS 13.0+)
 - Adding new .swift files requires 4 edits to project.pbxproj: PBXBuildFile, PBXFileReference, PBXGroup children, and PBXSourcesBuildPhase files
 - Use LSCopyAllHandlersForURLScheme/LSCopyDefaultHandlerForURLScheme for browser detection (CoreServices)
+- Use LSSetDefaultHandlerForURLScheme for both 'http' and 'https' to set default browser (CoreServices)
 ---
 
 ## 2026-01-28 - US-001
@@ -96,4 +97,21 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Image(nsImage:) is used to display NSImage in SwiftUI
   - Group wrapper needed around ForEach to attach .onAppear modifier
   - .onAppear is called each time the menu opens, ensuring fresh browser list
+---
+
+## 2026-01-28 - US-006
+- What was implemented:
+  - Added setDefaultBrowser(bundleIdentifier:) method to BrowserManager class
+  - Uses LSSetDefaultHandlerForURLScheme for both 'http' and 'https' schemes
+  - Returns Bool indicating success (both schemes must succeed)
+  - Added switchToBrowser(_:) method in BrowserMenuView to handle button action
+  - UI immediately updates defaultBrowserID state after switching (checkmark moves instantly)
+- Files changed:
+  - Browseroo/BrowserManager.swift (modified)
+  - Browseroo/BrowserooApp.swift (modified)
+- **Learnings for future iterations:**
+  - LSSetDefaultHandlerForURLScheme returns OSStatus, compare with noErr for success
+  - @discardableResult allows ignoring the return value when not needed
+  - Must set both 'http' and 'https' schemes for complete browser switching
+  - Updating @State property immediately makes UI responsive without waiting for refresh
 ---

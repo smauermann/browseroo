@@ -1,0 +1,154 @@
+{
+  "project": "Browseroo",
+  "branchName": "ralph/browser-switcher",
+  "description": "Lightweight macOS menu bar application for one-click default browser switching",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Create Xcode project with menu bar app structure",
+      "description": "As a developer, I need the foundational Xcode project configured as a menu bar agent app.",
+      "acceptanceCriteria": [
+        "Create Xcode project named Browseroo with SwiftUI lifecycle",
+        "Set LSUIElement to true in Info.plist (no Dock icon)",
+        "Set minimum deployment target to macOS 13.0",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Add menu bar icon and basic dropdown",
+      "description": "As a user, I want the app to appear in my menu bar with a clickable icon that opens a dropdown menu.",
+      "acceptanceCriteria": [
+        "App displays icon in macOS menu bar using MenuBarExtra",
+        "Clicking icon opens a dropdown menu",
+        "Menu contains placeholder text 'Browseroo' for now",
+        "App does not appear in Dock when running",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Create BrowserManager to detect installed browsers",
+      "description": "As a developer, I need a service that queries the system for all installed browsers.",
+      "acceptanceCriteria": [
+        "Create BrowserManager class/struct",
+        "Query system for apps registered as HTTP/HTTPS URL handlers using LSCopyAllHandlersForURLScheme",
+        "Return array of Browser objects with bundleIdentifier, name, and icon",
+        "Filter to only include actual browsers (exclude system apps like Mail)",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Get current default browser",
+      "description": "As a developer, I need to determine which browser is currently set as the system default.",
+      "acceptanceCriteria": [
+        "Add method to BrowserManager to get current default browser",
+        "Use LSCopyDefaultHandlerForURLScheme with 'https' scheme",
+        "Return the matching Browser object or nil if not found",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Display browser list in menu",
+      "description": "As a user, I want to see all my installed browsers listed in the dropdown menu.",
+      "acceptanceCriteria": [
+        "Menu displays list of detected browsers",
+        "Each browser shows its icon and name",
+        "Current default browser has a checkmark indicator",
+        "List refreshes when menu opens",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Implement browser switching",
+      "description": "As a user, I want to click a browser to make it my default.",
+      "acceptanceCriteria": [
+        "Clicking a browser in the list sets it as system default",
+        "Use LSSetDefaultHandlerForURLScheme for both 'http' and 'https' schemes",
+        "Checkmark moves to newly selected browser",
+        "No System Settings dialogs required for the switch",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Add Quit menu option",
+      "description": "As a user, I want a Quit option to close the app.",
+      "acceptanceCriteria": [
+        "Menu includes 'Quit Browseroo' option below browser list",
+        "Divider separates browser list from Quit option",
+        "Clicking Quit terminates the application",
+        "Keyboard shortcut ⌘Q works when menu is open",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Add About dialog",
+      "description": "As a user, I want an About option to see app information.",
+      "acceptanceCriteria": [
+        "Menu includes 'About Browseroo' option",
+        "Clicking shows native about panel or custom window",
+        "About shows app name, version number, and copyright",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Add Launch at Login toggle",
+      "description": "As a user, I want Browseroo to optionally start when I log in.",
+      "acceptanceCriteria": [
+        "Menu includes 'Launch at Login' toggle option",
+        "Toggle uses SMAppService.mainApp for login item management",
+        "Checkmark indicates current enabled/disabled state",
+        "State persists across app restarts",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Support keyboard navigation in menu",
+      "description": "As a user, I want to navigate the browser list using keyboard.",
+      "acceptanceCriteria": [
+        "Arrow keys navigate between menu items when dropdown is open",
+        "Enter/Return selects the highlighted browser",
+        "Escape closes the menu",
+        "Accessibility labels added for VoiceOver support",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

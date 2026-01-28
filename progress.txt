@@ -1,3 +1,30 @@
 # Ralph Progress Log
 Started: Wed Jan 28 23:18:45 CET 2026
+
+## Codebase Patterns
+- Xcode project structure: Browseroo.xcodeproj/project.pbxproj contains build configuration, Browseroo/ contains source files
+- SwiftUI app uses @main attribute on App struct with Scene body
+- Info.plist with LSUIElement=true makes app a menu bar agent (no Dock icon)
+- Deployment target set in project.pbxproj under MACOSX_DEPLOYMENT_TARGET
+- xcodebuild requires Xcode.app to be installed (Command Line Tools not sufficient)
+---
+
+## 2026-01-28 - US-001
+- What was implemented:
+  - Created Xcode project named Browseroo with SwiftUI lifecycle
+  - Set LSUIElement to true in Info.plist (no Dock icon)
+  - Set minimum deployment target to macOS 13.0
+  - Created app entitlements, asset catalogs, and basic SwiftUI app structure
+- Files changed:
+  - Browseroo.xcodeproj/project.pbxproj (new)
+  - Browseroo/BrowserooApp.swift (new)
+  - Browseroo/ContentView.swift (new)
+  - Browseroo/Info.plist (new)
+  - Browseroo/Browseroo.entitlements (new)
+  - Browseroo/Assets.xcassets/* (new)
+- **Learnings for future iterations:**
+  - xcodebuild requires full Xcode.app installation, not just Command Line Tools
+  - Use `swiftc -parse` to verify Swift syntax when xcodebuild unavailable
+  - LSUIElement in Info.plist controls whether app appears in Dock
+  - Deployment target is set in both Debug and Release configurations in project.pbxproj
 ---

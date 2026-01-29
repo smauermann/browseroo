@@ -297,3 +297,23 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Print statements in macOS apps appear in Console.app or via `log stream` command
   - Using a consistent prefix like [Browseroo] makes filtering logs easy
 ---
+
+## 2026-01-29 - US-017
+- What was implemented:
+  - Created scripts/test-auto-confirm.sh for automated testing of auto-confirm feature
+  - Script builds Browseroo with xcodebuild, launches the app
+  - Uses osascript to detect current default browser and select an alternative
+  - Uses AppleScript via System Events to click menu bar icon and select browser from menu
+  - Waits 3 seconds for auto-confirm to process any dialog
+  - Checks CoreServicesUIAgent window count to determine if confirmation dialog is present
+  - Reports PASS (exit 0) if no dialog, FAIL (exit 1) if dialog present
+  - Quits Browseroo cleanly and includes cleanup for any remaining dialogs
+- Files changed:
+  - scripts/test-auto-confirm.sh (new)
+- **Learnings for future iterations:**
+  - MenuBarExtra items are accessed via `menu bar item 1 of menu bar 2` in AppleScript (menu bar 1 is the Apple menu bar, menu bar 2 is extras)
+  - Use `process "AppName"` to target a menu bar app's System Events process
+  - CoreServicesUIAgent is the process that shows the default browser confirmation dialog
+  - osascript can get app path via `tell application "System Events" to get path of application id "bundleID"`
+  - Shell scripts can use `$(cat <<'EOF' ... EOF)` for multi-line strings with special characters
+---

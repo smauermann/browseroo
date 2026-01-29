@@ -253,8 +253,8 @@
         "App builds without errors using xcodebuild"
       ],
       "priority": 17,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created scripts/test-auto-confirm.sh that builds Browseroo, launches it, uses osascript to click menu bar and select a non-default browser, waits 3 seconds, checks CoreServicesUIAgent window count, and reports PASS/FAIL. Script is executable and app builds successfully."
     },
     {
       "id": "US-018",

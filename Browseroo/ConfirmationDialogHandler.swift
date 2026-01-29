@@ -1,4 +1,5 @@
 import AppKit
+import Foundation
 
 class ConfirmationDialogHandler {
     /// AppleScript source that finds and clicks the "Use [Browser]" button
@@ -39,6 +40,8 @@ class ConfirmationDialogHandler {
     }
 
     /// Executes the AppleScript to click the confirmation button.
+    /// Uses NSAppleScript directly (requires sandbox to be disabled and
+    /// Accessibility permission granted to Browseroo).
     /// Returns the result of the execution.
     @discardableResult
     static func clickConfirmButton() -> ConfirmResult {

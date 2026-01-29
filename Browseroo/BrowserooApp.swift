@@ -90,8 +90,7 @@ struct BrowserMenuView: View {
                 NSApplication.shared.orderFrontStandardAboutPanel(options: [
                     .applicationName: "Browseroo",
                     .applicationVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0",
-                    .version: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1",
-                    .copyright: "© 2026 Browseroo. All rights reserved."
+                    .version: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
                 ])
             }
             .accessibilityLabel("About Browseroo")

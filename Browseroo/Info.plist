@@ -10,5 +10,7 @@
 	<string>1</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2026 Browseroo. All rights reserved.</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>Browseroo needs to send Apple Events to automatically confirm the default browser change dialog.</string>
 </dict>
 </plist>

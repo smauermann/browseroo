@@ -99,9 +99,13 @@ class BrowserManager {
 
         let success = httpResult == noErr && httpsResult == noErr
 
-        // If successful and autoConfirm enabled, run AppleScript asynchronously
-        // to click the confirmation dialog (if it appears)
-        if success && autoConfirm {
+        // On modern macOS, LSSetDefaultHandlerForURLScheme for https triggers
+        // a confirmation dialog and may return error -54 (user confirmation needed).
+        // We should still attempt auto-confirm even if httpsResult indicates
+        // the dialog was shown (error -54).
+        let shouldAutoConfirm = autoConfirm && (httpResult == noErr || httpsResult == noErr || httpsResult == -54)
+
+        if shouldAutoConfirm {
             autoConfirmBrowserChange()
         }
 
@@ -113,8 +117,8 @@ class BrowserManager {
     /// to avoid blocking the UI.
     private func autoConfirmBrowserChange() {
         DispatchQueue.global(qos: .userInitiated).async {
-            // Wait 150ms for the dialog to appear
-            Thread.sleep(forTimeInterval: 0.15)
+            // Wait 500ms for the dialog to appear
+            Thread.sleep(forTimeInterval: 0.5)
 
             // Execute the AppleScript to click the confirmation button
             // Errors are handled gracefully - if no dialog appears or
@@ -152,3 +156,4 @@ class BrowserManager {
         )
     }
 }
+

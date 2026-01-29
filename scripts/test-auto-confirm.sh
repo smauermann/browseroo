@@ -2,6 +2,11 @@
 #
 # test-auto-confirm.sh - Automated test for Browseroo auto-confirm feature
 #
+# PREREQUISITES:
+# - Browseroo must have Accessibility permission granted in System Settings
+#   (System Settings > Privacy & Security > Accessibility > Browseroo.app)
+# - Without this permission, the auto-confirm feature cannot click the dialog
+#
 # This script:
 # 1. Builds Browseroo
 # 2. Launches it

@@ -47,9 +47,19 @@ class ConfirmationDialogHandler {
 
         guard let result = script?.executeAndReturnError(&errorDict) else {
             if let error = errorDict {
-                let message = error[NSAppleScript.errorMessage] as? String ?? "Unknown error"
-                return .error(message)
+                let errorNumber = error[NSAppleScript.errorNumber] as? Int
+                let errorMessage = error[NSAppleScript.errorMessage] as? String
+                let errorBriefMessage = error[NSAppleScript.errorBriefMessage] as? String
+
+                print("[Browseroo] AppleScript execution failed:")
+                print("[Browseroo]   errorNumber: \(errorNumber ?? -1)")
+                print("[Browseroo]   errorMessage: \(errorMessage ?? "nil")")
+                print("[Browseroo]   errorBriefMessage: \(errorBriefMessage ?? "nil")")
+                print("[Browseroo]   Full error dictionary: \(error)")
+
+                return .error(errorMessage ?? "Unknown error")
             }
+            print("[Browseroo] AppleScript execution failed: Script returned nil with no error")
             return .error("Script execution failed")
         }
 

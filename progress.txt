@@ -19,6 +19,8 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - Use AXIsProcessTrusted() from ApplicationServices to check Accessibility permission
 - Open System Settings Accessibility: NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
 - Use NSAppleScript(source:) to run AppleScript from Swift; executeAndReturnError(&errorDict) runs it and returns result or nil
+- For UI automation with NSAppleScript: sandbox must be disabled (com.apple.security.app-sandbox=false) AND app needs Accessibility permission
+- LSSetDefaultHandlerForURLScheme returns -54 when confirmation dialog is shown; handle this as a trigger for auto-confirm, not as failure
 ---
 
 ## 2026-01-28 - US-001
@@ -316,4 +318,30 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - CoreServicesUIAgent is the process that shows the default browser confirmation dialog
   - osascript can get app path via `tell application "System Events" to get path of application id "bundleID"`
   - Shell scripts can use `$(cat <<'EOF' ... EOF)` for multi-line strings with special characters
+---
+
+## 2026-01-29 - US-018
+- What was implemented:
+  - Identified root cause: app sandbox prevented NSAppleScript from accessing System Events
+  - Disabled app sandbox by setting com.apple.security.app-sandbox to false in entitlements
+  - Added com.apple.security.automation.apple-events entitlement for Apple Events permission
+  - Added NSAppleEventsUsageDescription to Info.plist explaining why permission is needed
+  - Fixed auto-confirm trigger: now activates when httpsResult=-54 (dialog shown), not just on success
+  - Increased dialog wait time from 150ms to 500ms for more reliable operation
+  - Fixed pre-existing build error with .copyright key in About panel (removed invalid key)
+  - Updated test script documentation to note Accessibility permission requirement
+- Files changed:
+  - Browseroo/Browseroo.entitlements (modified - disabled sandbox, added entitlement)
+  - Browseroo/Info.plist (modified - added NSAppleEventsUsageDescription)
+  - Browseroo/BrowserManager.swift (modified - fixed auto-confirm trigger logic, increased delay)
+  - Browseroo/ConfirmationDialogHandler.swift (modified - cleaned up code)
+  - Browseroo/BrowserooApp.swift (modified - fixed .copyright build error)
+  - scripts/test-auto-confirm.sh (modified - added prerequisites documentation)
+- **Learnings for future iterations:**
+  - App sandbox (com.apple.security.app-sandbox=true) completely blocks NSAppleScript from accessing System Events
+  - Even with Apple Events entitlement, sandbox must be disabled for UI automation
+  - LSSetDefaultHandlerForURLScheme returns -54 when confirmation dialog is shown (not just on failure)
+  - Must trigger auto-confirm even when httpsResult is -54, not just when both http and https succeed
+  - Browseroo must have Accessibility permission granted in System Settings for auto-confirm to work
+  - 500ms delay is more reliable than 150ms for waiting for dialog to appear
 ---

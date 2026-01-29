@@ -269,8 +269,8 @@
         "App builds without errors using xcodebuild"
       ],
       "priority": 18,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Root cause identified: app sandbox prevented NSAppleScript from accessing System Events. Fix: disabled sandbox (com.apple.security.app-sandbox=false), added Apple Events entitlement and NSAppleEventsUsageDescription. Also fixed auto-confirm trigger to activate when httpsResult=-54 (dialog shown). Test script passes when Browseroo has Accessibility permission granted in System Settings."
     }
   ]
 }

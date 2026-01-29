@@ -282,3 +282,18 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Always use `if exists` check before attempting to click dynamic UI elements
   - Use `first button whose name starts with` for partial name matching in AppleScript
 ---
+
+## 2026-01-29 - US-016
+- What was implemented:
+  - Added comprehensive error logging to ConfirmationDialogHandler.clickConfirmButton()
+  - When AppleScript execution fails, logs errorNumber, errorMessage, errorBriefMessage from error dictionary
+  - Logs full error dictionary for complete diagnostic information
+  - All logs use [Browseroo] prefix for easy filtering with: log stream --predicate 'process == "Browseroo"' --level debug
+  - Only logs on errors, not on successful execution (per requirements)
+- Files changed:
+  - Browseroo/ConfirmationDialogHandler.swift (modified)
+- **Learnings for future iterations:**
+  - NSAppleScript.errorNumber, NSAppleScript.errorMessage, NSAppleScript.errorBriefMessage are the keys for error info
+  - Print statements in macOS apps appear in Console.app or via `log stream` command
+  - Using a consistent prefix like [Browseroo] makes filtering logs easy
+---

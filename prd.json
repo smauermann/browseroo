@@ -222,6 +222,55 @@
       "priority": 15,
       "passes": true,
       "notes": "Replaced repeat loop with direct button targeting using 'click (first button whose name starts with \"Use \")' with exists check before clicking. Swift syntax verified with xcodebuild."
+    },
+    {
+      "id": "US-016",
+      "title": "Add comprehensive error logging to AppleScript execution",
+      "description": "As a developer, I need to see exactly what happens when NSAppleScript runs so I can diagnose why it fails silently. The script works in Script Editor but not via NSAppleScript from Swift.",
+      "acceptanceCriteria": [
+        "In ConfirmationDialogHandler.swift, log the full error dictionary from executeAndReturnError()",
+        "Log NSAppleScript.errorNumber, NSAppleScript.errorMessage, and NSAppleScript.errorBriefMessage",
+        "Log the script result string value if execution succeeds",
+        "Only log on errors, not on success (use print with '[Browseroo]' prefix)",
+        "Logs viewable via: log stream --predicate 'process == \"Browseroo\"' --level debug",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": "Added comprehensive error logging with [Browseroo] prefix. Logs errorNumber, errorMessage, errorBriefMessage, and full error dictionary on failure. No logging on success per requirements."
+    },
+    {
+      "id": "US-017",
+      "title": "Add automated test script for auto-confirm",
+      "description": "As a developer, I need an automated way to test the auto-confirm feature without manual interaction.",
+      "acceptanceCriteria": [
+        "Create scripts/test-auto-confirm.sh that builds and launches Browseroo",
+        "Script uses osascript to click Browseroo menu bar icon and select a non-default browser",
+        "Script waits 1-2 seconds then checks if CoreServicesUIAgent has any windows",
+        "Script prints PASS if no dialog (window count 0), FAIL if dialog present",
+        "Script quits Browseroo and exits with code 0 on success, 1 on failure",
+        "Script is executable (chmod +x)",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Fix NSAppleScript execution based on logged errors",
+      "description": "As a developer, I need to fix the NSAppleScript issue based on error logs. Common causes: sandboxing, missing entitlements (com.apple.security.automation.apple-events), or hardened runtime issues.",
+      "acceptanceCriteria": [
+        "Run test script from US-017 and capture error logs",
+        "Analyze logged errors to identify root cause",
+        "Implement fix (likely adding Apple Events entitlement or adjusting sandbox settings)",
+        "If NSAppleScript cannot work, fall back to Process with osascript as last resort",
+        "Test script from US-017 passes (exits with code 0)",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
     }
   ]
 }

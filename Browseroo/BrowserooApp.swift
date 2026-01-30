@@ -30,13 +30,13 @@ struct BrowserMenuView: View {
                             .accessibilityHidden(true)
                         Text(browser.name)
                         Spacer()
-                        if browser.bundleIdentifier == defaultBrowserID {
+                        if isDefaultBrowser(browser) {
                             Image(systemName: "checkmark")
                                 .accessibilityHidden(true)
                         }
                     }
                 }
-                .accessibilityLabel(browser.bundleIdentifier == defaultBrowserID
+                .accessibilityLabel(isDefaultBrowser(browser)
                     ? "\(browser.name), current default browser"
                     : browser.name)
                 .accessibilityHint("Double tap to set as default browser")
@@ -139,4 +139,12 @@ struct BrowserMenuView: View {
         // Refresh state after user potentially grants permission
         accessibilityGranted = AccessibilityManager.isAccessibilityGranted()
     }
+
+    /// Case-insensitive comparison for bundle identifiers.
+    /// macOS may return bundle IDs with different casing from different APIs.
+    private func isDefaultBrowser(_ browser: Browser) -> Bool {
+        guard let defaultID = defaultBrowserID else { return false }
+        return browser.bundleIdentifier.caseInsensitiveCompare(defaultID) == .orderedSame
+    }
 }
+

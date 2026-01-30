@@ -271,6 +271,22 @@
       "priority": 18,
       "passes": true,
       "notes": "Root cause identified: app sandbox prevented NSAppleScript from accessing System Events. Fix: disabled sandbox (com.apple.security.app-sandbox=false), added Apple Events entitlement and NSAppleEventsUsageDescription. Also fixed auto-confirm trigger to activate when httpsResult=-54 (dialog shown). Test script passes when Browseroo has Accessibility permission granted in System Settings."
+    },
+    {
+      "id": "US-019",
+      "title": "Fix default browser checkmark indicator",
+      "description": "As a user, I want to see a checkmark next to my current default browser so I know which one is active. The checkmark is not appearing - this is a bug in existing functionality from US-005. Likely causes: bundle ID case mismatch, nil defaultBrowserID, or comparison issue.",
+      "acceptanceCriteria": [
+        "Checkmark (SF Symbol 'checkmark') appears next to the actual system default browser when menu opens",
+        "Checkmark moves to newly selected browser after switching",
+        "Only one browser has checkmark at any time",
+        "Test: scripts/test-auto-confirm.sh still passes",
+        "App builds without errors using xcodebuild"
+      ],
+      "priority": 19,
+      "passes": true,
+      "notes": "Fixed by using case-insensitive bundle ID comparison (caseInsensitiveCompare). macOS APIs may return bundle IDs with different casing, causing the exact string comparison to fail. Added isDefaultBrowser() helper function for consistent comparison."
     }
   ]
 }
+

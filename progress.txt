@@ -21,6 +21,7 @@ Started: Wed Jan 28 23:18:45 CET 2026
 - Use NSAppleScript(source:) to run AppleScript from Swift; executeAndReturnError(&errorDict) runs it and returns result or nil
 - For UI automation with NSAppleScript: sandbox must be disabled (com.apple.security.app-sandbox=false) AND app needs Accessibility permission
 - LSSetDefaultHandlerForURLScheme returns -54 when confirmation dialog is shown; handle this as a trigger for auto-confirm, not as failure
+- Compare bundle IDs case-insensitively (use caseInsensitiveCompare) - macOS APIs may return different casing
 ---
 
 ## 2026-01-28 - US-001
@@ -345,3 +346,18 @@ Started: Wed Jan 28 23:18:45 CET 2026
   - Browseroo must have Accessibility permission granted in System Settings for auto-confirm to work
   - 500ms delay is more reliable than 150ms for waiting for dialog to appear
 ---
+
+## 2026-01-30 - US-019
+- What was implemented:
+  - Fixed checkmark not appearing next to the default browser in menu
+  - Root cause: bundle ID comparison was case-sensitive, but macOS APIs may return bundle IDs with different casing
+  - Added isDefaultBrowser(_ browser:) helper function that uses caseInsensitiveCompare for bundle ID comparison
+  - Updated both the checkmark display and accessibility label to use the new helper function
+- Files changed:
+  - Browseroo/BrowserooApp.swift (modified)
+- **Learnings for future iterations:**
+  - macOS bundle IDs should be compared case-insensitively (use caseInsensitiveCompare instead of ==)
+  - LSCopyDefaultHandlerForURLScheme and LSCopyAllHandlersForURLScheme may return different casing for the same app
+  - When comparing identifiers from different macOS APIs, always use case-insensitive comparison
+---
+

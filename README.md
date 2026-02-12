@@ -17,6 +17,14 @@ A macOS menu bar app for switching your default browser in one click.
 2. Open the DMG and drag Browseroo to Applications
 3. Launch Browseroo from Applications
 
+> **Note:** macOS will block the first launch because the app is not signed with an Apple Developer certificate. To allow it:
+> 1. Try to open Browseroo (it will be blocked)
+> 2. Open **System Settings > Privacy & Security**
+> 3. Scroll down to find *"Browseroo was blocked from use because it is not from an identified developer"*
+> 4. Click **Open Anyway** and enter your password
+>
+> This only needs to be done once.
+
 ### Build from source
 
 ```bash

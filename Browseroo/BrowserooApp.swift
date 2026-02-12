@@ -5,7 +5,7 @@ import ServiceManagement
 @main
 struct BrowserooApp: App {
     var body: some Scene {
-        MenuBarExtra("Browseroo", systemImage: "globe") {
+        MenuBarExtra("Browseroo", image: "MenuBarIcon") {
             BrowserMenuView()
         }
     }

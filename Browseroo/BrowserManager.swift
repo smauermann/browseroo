@@ -112,17 +112,10 @@ class BrowserManager {
         return success
     }
 
-    /// Asynchronously waits a short delay and then executes the AppleScript
-    /// to click the confirmation dialog button. Runs on a background queue
-    /// to avoid blocking the UI.
+    /// Executes the AppleScript to click the confirmation dialog button.
+    /// Runs on a background queue to avoid blocking the UI.
     private func autoConfirmBrowserChange() {
         DispatchQueue.global(qos: .userInitiated).async {
-            // Wait 500ms for the dialog to appear
-            Thread.sleep(forTimeInterval: 0.5)
-
-            // Execute the AppleScript to click the confirmation button
-            // Errors are handled gracefully - if no dialog appears or
-            // clicking fails, we simply don't crash
             _ = ConfirmationDialogHandler.clickConfirmButton()
         }
     }

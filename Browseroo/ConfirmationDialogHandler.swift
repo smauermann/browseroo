@@ -13,21 +13,21 @@ class ConfirmationDialogHandler {
     /// completes without error.
     static let clickConfirmButtonScript = """
         tell application "System Events"
-            -- Check if CoreServicesUIAgent has any windows (the confirmation dialog)
-            if exists (process "CoreServicesUIAgent") then
-                tell process "CoreServicesUIAgent"
-                    set windowCount to count of windows
-                    if windowCount > 0 then
-                        tell window 1
-                            -- Check if a "Use *" button exists, then click it directly
-                            if exists (first button whose name starts with "Use ") then
-                                click (first button whose name starts with "Use ")
-                                return "clicked"
-                            end if
-                        end tell
-                    end if
-                end tell
-            end if
+            repeat 50 times
+                if exists (process "CoreServicesUIAgent") then
+                    tell process "CoreServicesUIAgent"
+                        if (count of windows) > 0 then
+                            tell window 1
+                                if exists (first button whose name starts with "Use ") then
+                                    click (first button whose name starts with "Use ")
+                                    return "clicked"
+                                end if
+                            end tell
+                        end if
+                    end tell
+                end if
+                delay 0.1
+            end repeat
         end tell
         return "no_dialog"
         """

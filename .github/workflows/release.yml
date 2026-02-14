@@ -43,3 +43,23 @@ jobs:
         with:
           files: Browseroo-*.dmg
           generate_release_notes: true
+
+      - name: Update Homebrew Tap
+        env:
+          TAP_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          DMG_NAME="Browseroo-${GITHUB_REF_NAME}.dmg"
+          SHA256=$(shasum -a 256 "$DMG_NAME" | awk '{print $1}')
+
+          git clone https://x-access-token:${TAP_TOKEN}@github.com/smauermann/homebrew-tap.git /tmp/homebrew-tap
+          cd /tmp/homebrew-tap
+
+          sed -i '' "s/version \".*\"/version \"${VERSION}\"/" Casks/browseroo.rb
+          sed -i '' "s/sha256 \".*\"/sha256 \"${SHA256}\"/" Casks/browseroo.rb
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/browseroo.rb
+          git commit -m "chore: update browseroo to ${VERSION}"
+          git push

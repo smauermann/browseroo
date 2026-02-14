@@ -31,6 +31,7 @@ class BrowserManager {
         "io.nickvision.nicegopher",
         "org.nickvision.nicegopher",
         "com.nickvision.nicegopher.macos",
+        "net.imput.helium", // Helium
     ]
 
     /// Returns an array of installed browsers detected on the system.

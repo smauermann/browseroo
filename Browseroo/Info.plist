@@ -10,7 +10,19 @@
 	<string>1</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2026 Browseroo. All rights reserved.</string>
-	<key>NSAppleEventsUsageDescription</key>
-	<string>Browseroo needs to send Apple Events to automatically confirm the default browser change dialog.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>Web URLs</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>http</string>
+				<string>https</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+		</dict>
+	</array>
 </dict>
 </plist>

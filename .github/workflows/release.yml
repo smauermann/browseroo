@@ -12,6 +12,14 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
+      - name: Generate Token
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          repositories: homebrew-tap
+
       - uses: actions/checkout@v4
 
       - name: Build Release
@@ -46,7 +54,7 @@ jobs:
 
       - name: Update Homebrew Tap
         env:
-          TAP_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
+          TAP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           DMG_NAME="Browseroo-${GITHUB_REF_NAME}.dmg"

@@ -83,42 +83,35 @@ class BrowserManager {
         return browsers
     }
 
-    /// Sets the specified browser as the system default for HTTP and HTTPS.
-    /// Returns true if successful, false otherwise.
-    /// If autoConfirm is true, attempts to click the confirmation dialog button
-    /// asynchronously after a short delay.
-    @discardableResult
-    func setDefaultBrowser(bundleIdentifier: String, autoConfirm: Bool = true) -> Bool {
-        let httpResult = LSSetDefaultHandlerForURLScheme(
-            "http" as CFString,
-            bundleIdentifier as CFString
-        )
-        let httpsResult = LSSetDefaultHandlerForURLScheme(
-            "https" as CFString,
-            bundleIdentifier as CFString
-        )
-
-        let success = httpResult == noErr && httpsResult == noErr
-
-        // On modern macOS, LSSetDefaultHandlerForURLScheme for https triggers
-        // a confirmation dialog and may return error -54 (user confirmation needed).
-        // We should still attempt auto-confirm even if httpsResult indicates
-        // the dialog was shown (error -54).
-        let shouldAutoConfirm = autoConfirm && (httpResult == noErr || httpsResult == noErr || httpsResult == -54)
-
-        if shouldAutoConfirm {
-            autoConfirmBrowserChange()
+    /// True if Browseroo is the system default handler for https.
+    var isBrowserooDefault: Bool {
+        guard let bundleID = Bundle.main.bundleIdentifier,
+              let defaultID = LSCopyDefaultHandlerForURLScheme("https" as CFString)?.takeRetainedValue() as String? else {
+            return false
         }
-
-        return success
+        return defaultID.caseInsensitiveCompare(bundleID) == .orderedSame
     }
 
-    /// Executes the AppleScript to click the confirmation dialog button.
-    /// Runs on a background queue to avoid blocking the UI.
-    private func autoConfirmBrowserChange() {
-        DispatchQueue.global(qos: .userInitiated).async {
-            _ = ConfirmationDialogHandler.clickConfirmButton()
-        }
+    /// Asks macOS to make Browseroo the default browser.
+    /// Shows the system confirmation dialog once; after that, switching
+    /// browsers is handled internally and never prompts again.
+    func makeBrowserooDefault() {
+        guard let bundleID = Bundle.main.bundleIdentifier else { return }
+        LSSetDefaultHandlerForURLScheme("http" as CFString, bundleID as CFString)
+        LSSetDefaultHandlerForURLScheme("https" as CFString, bundleID as CFString)
+    }
+
+    /// Opens the given URLs in the browser with the given bundle ID.
+    /// Falls back to Safari if that browser is not installed.
+    func open(_ urls: [URL], inBrowserWithBundleID bundleID: String) {
+        // Never route to ourselves to avoid an open-URL loop.
+        guard bundleID.caseInsensitiveCompare(Bundle.main.bundleIdentifier ?? "") != .orderedSame else { return }
+
+        let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID)
+            ?? NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.Safari")
+        guard let appURL else { return }
+
+        NSWorkspace.shared.open(urls, withApplicationAt: appURL, configuration: NSWorkspace.OpenConfiguration())
     }
 
     /// Returns the current default browser, or nil if it cannot be determined.

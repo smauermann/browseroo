@@ -4,6 +4,8 @@ import ServiceManagement
 
 @main
 struct BrowserooApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
     var body: some Scene {
         MenuBarExtra("Browseroo", image: "MenuBarIcon") {
             BrowserMenuView()
@@ -11,11 +13,20 @@ struct BrowserooApp: App {
     }
 }
 
+/// Receives URLs from macOS (Browseroo is registered as a browser)
+/// and forwards them to the user's selected browser.
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func application(_ application: NSApplication, open urls: [URL]) {
+        let selectedID = UserDefaults.standard.string(forKey: "selectedBrowserID") ?? "com.apple.Safari"
+        BrowserManager().open(urls, inBrowserWithBundleID: selectedID)
+    }
+}
+
 struct BrowserMenuView: View {
+    @AppStorage("selectedBrowserID") private var selectedBrowserID: String = ""
     @State private var browsers: [Browser] = []
-    @State private var defaultBrowserID: String?
+    @State private var isBrowserooDefault: Bool = false
     @State private var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
-    @State private var accessibilityGranted: Bool = AccessibilityManager.isAccessibilityGranted()
 
     private let browserManager = BrowserManager()
 
@@ -25,41 +36,40 @@ struct BrowserMenuView: View {
                 // Toggle renders the native menu checkmark; Button labels in
                 // menus are flattened to icon + text, dropping any extra views.
                 Toggle(isOn: Binding(
-                    get: { isDefaultBrowser(browser) },
-                    set: { if $0 { switchToBrowser(browser) } }
+                    get: { isSelected(browser) },
+                    set: { if $0 { selectedBrowserID = browser.bundleIdentifier } }
                 )) {
                     Image(nsImage: browser.icon)
                         .accessibilityHidden(true)
                     Text(browser.name)
                 }
-                .accessibilityLabel(isDefaultBrowser(browser)
-                    ? "\(browser.name), current default browser"
+                .accessibilityLabel(isSelected(browser)
+                    ? "\(browser.name), current browser"
                     : browser.name)
-                .accessibilityHint("Double tap to set as default browser")
+                .accessibilityHint("Double tap to open links in this browser")
             }
 
             Divider()
+
+            if !isBrowserooDefault {
+                Button("Set Browseroo as Default Browser…") {
+                    browserManager.makeBrowserooDefault()
+                    // The system shows a one-time confirmation dialog; reflect
+                    // the result shortly after the user has responded.
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        isBrowserooDefault = browserManager.isBrowserooDefault
+                    }
+                }
+                .accessibilityHint("Required so Browseroo can route links to your selected browser")
+
+                Divider()
+            }
 
             Toggle("Launch at Login", isOn: Binding(
                 get: { launchAtLogin },
                 set: { _ in toggleLaunchAtLogin() }
             ))
             .accessibilityHint("Double tap to toggle")
-
-            if accessibilityGranted {
-                Toggle("Auto-Confirm", isOn: .constant(true))
-                    .disabled(true)
-                    .accessibilityLabel("Auto-Confirm, enabled")
-                    .accessibilityHint("Accessibility permission granted")
-            } else {
-                Button(action: {
-                    requestAccessibilityPermission()
-                }) {
-                    Text("Auto-Confirm: Grant Permission...")
-                }
-                .accessibilityLabel("Auto-Confirm, disabled")
-                .accessibilityHint("Double tap to grant Accessibility permission")
-            }
 
             Divider()
 
@@ -82,20 +92,25 @@ struct BrowserMenuView: View {
             .accessibilityHint("Double tap to quit the application")
         }
         .onAppear {
-            refreshBrowserList()
+            refreshState()
         }
     }
 
-    private func refreshBrowserList() {
+    private func refreshState() {
         browsers = browserManager.getInstalledBrowsers()
-        defaultBrowserID = browserManager.getDefaultBrowser()?.bundleIdentifier
+        isBrowserooDefault = browserManager.isBrowserooDefault
         launchAtLogin = SMAppService.mainApp.status == .enabled
-        accessibilityGranted = AccessibilityManager.isAccessibilityGranted()
-    }
 
-    private func switchToBrowser(_ browser: Browser) {
-        browserManager.setDefaultBrowser(bundleIdentifier: browser.bundleIdentifier)
-        defaultBrowserID = browser.bundleIdentifier
+        // First run: seed the selection from the current system default
+        // (before Browseroo takes over), falling back to the first browser.
+        if selectedBrowserID.isEmpty {
+            let systemDefault = browserManager.getDefaultBrowser()
+            if let systemDefault, browsers.contains(systemDefault) {
+                selectedBrowserID = systemDefault.bundleIdentifier
+            } else if let first = browsers.first {
+                selectedBrowserID = first.bundleIdentifier
+            }
+        }
     }
 
     private func toggleLaunchAtLogin() {
@@ -112,17 +127,7 @@ struct BrowserMenuView: View {
         }
     }
 
-    private func requestAccessibilityPermission() {
-        AccessibilityManager.showAccessibilityAlert()
-        // Refresh state after user potentially grants permission
-        accessibilityGranted = AccessibilityManager.isAccessibilityGranted()
-    }
-
-    /// Case-insensitive comparison for bundle identifiers.
-    /// macOS may return bundle IDs with different casing from different APIs.
-    private func isDefaultBrowser(_ browser: Browser) -> Bool {
-        guard let defaultID = defaultBrowserID else { return false }
-        return browser.bundleIdentifier.caseInsensitiveCompare(defaultID) == .orderedSame
+    private func isSelected(_ browser: Browser) -> Bool {
+        browser.bundleIdentifier.caseInsensitiveCompare(selectedBrowserID) == .orderedSame
     }
 }
-

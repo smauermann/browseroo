@@ -1,11 +1,13 @@
 # Browseroo
 
-A macOS menu bar app for switching your default browser in one click.
+A macOS menu bar app for switching your browser in one click.
+
+Browseroo registers itself as your default browser and routes every link to the browser you've selected in the menu bar. Switching is instant — no system dialogs, no extra permissions.
 
 ## Features
 
 - Switch between installed browsers from the menu bar
-- Auto-confirms the macOS default browser dialog (no manual clicking)
+- No confirmation dialogs and no Accessibility permission needed
 - Launch at Login support
 - Lightweight — lives in the menu bar, no Dock icon
 
@@ -38,15 +40,9 @@ open build/Release/Browseroo.app
 
 On first launch, Browseroo will appear in your menu bar as a kangaroo icon.
 
-### Accessibility Permission (recommended)
+Click the icon and choose **Set Browseroo as Default Browser…**, then confirm the system dialog. This is the only prompt you'll ever see — from then on, Browseroo forwards every clicked link to whichever browser you've selected in the menu.
 
-For auto-confirm to work (automatically dismissing the "Use [Browser]?" dialog), grant Browseroo Accessibility permission:
-
-1. Open **System Settings > Privacy & Security > Accessibility**
-2. Click the **+** button and add Browseroo
-3. Toggle it on
-
-Without this permission, Browseroo still switches browsers — you'll just need to manually click the confirmation dialog each time.
+> **Note:** System Settings will show Browseroo as your default browser. That's how the routing works — your selected browser still opens all links.
 
 ## License
 

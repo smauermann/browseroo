@@ -22,19 +22,15 @@ struct BrowserMenuView: View {
     var body: some View {
         Group {
             ForEach(browsers) { browser in
-                Button(action: {
-                    switchToBrowser(browser)
-                }) {
-                    HStack {
-                        Image(nsImage: browser.icon)
-                            .accessibilityHidden(true)
-                        Text(browser.name)
-                        Spacer()
-                        if isDefaultBrowser(browser) {
-                            Image(systemName: "checkmark")
-                                .accessibilityHidden(true)
-                        }
-                    }
+                // Toggle renders the native menu checkmark; Button labels in
+                // menus are flattened to icon + text, dropping any extra views.
+                Toggle(isOn: Binding(
+                    get: { isDefaultBrowser(browser) },
+                    set: { if $0 { switchToBrowser(browser) } }
+                )) {
+                    Image(nsImage: browser.icon)
+                        .accessibilityHidden(true)
+                    Text(browser.name)
                 }
                 .accessibilityLabel(isDefaultBrowser(browser)
                     ? "\(browser.name), current default browser"
@@ -44,35 +40,17 @@ struct BrowserMenuView: View {
 
             Divider()
 
-            Button(action: {
-                toggleLaunchAtLogin()
-            }) {
-                HStack {
-                    Text("Launch at Login")
-                    Spacer()
-                    if launchAtLogin {
-                        Image(systemName: "checkmark")
-                            .accessibilityHidden(true)
-                    }
-                }
-            }
-            .accessibilityLabel(launchAtLogin
-                ? "Launch at Login, enabled"
-                : "Launch at Login, disabled")
+            Toggle("Launch at Login", isOn: Binding(
+                get: { launchAtLogin },
+                set: { _ in toggleLaunchAtLogin() }
+            ))
             .accessibilityHint("Double tap to toggle")
 
             if accessibilityGranted {
-                Button(action: {}) {
-                    HStack {
-                        Text("Auto-Confirm")
-                        Spacer()
-                        Image(systemName: "checkmark")
-                            .accessibilityHidden(true)
-                    }
-                }
-                .disabled(true)
-                .accessibilityLabel("Auto-Confirm, enabled")
-                .accessibilityHint("Accessibility permission granted")
+                Toggle("Auto-Confirm", isOn: .constant(true))
+                    .disabled(true)
+                    .accessibilityLabel("Auto-Confirm, enabled")
+                    .accessibilityHint("Accessibility permission granted")
             } else {
                 Button(action: {
                     requestAccessibilityPermission()

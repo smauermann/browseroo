@@ -13,13 +13,19 @@ Browseroo registers itself as your default browser and routes every link to the 
 
 ## Install
 
+### Homebrew
+
+```bash
+brew install --cask smauermann/tap/browseroo
+```
+
 ### Download
 
 1. Grab `Browseroo-vX.X.X.dmg` from the [latest release](https://github.com/smauermann/browseroo/releases/latest)
 2. Open the DMG and drag Browseroo to Applications
 3. Launch Browseroo from Applications
 
-> **Note:** macOS will block the first launch because the app is not signed with an Apple Developer certificate. To allow it:
+> **Note:** Regardless of install method, macOS will block the first launch because the app is not signed with an Apple Developer certificate. To allow it:
 > 1. Try to open Browseroo (it will be blocked)
 > 2. Open **System Settings > Privacy & Security**
 > 3. Scroll down to find *"Browseroo was blocked from use because it is not from an identified developer"*
